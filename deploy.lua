@@ -45,7 +45,7 @@ m.printEncryptedCode = function ( code, encryptionData )
 end
 m.runScript = function( path, dir, simPath, encryptionData)
 	local mypath
-	if (simPath and system.getInfo( "environment" ) == "simulator") then
+	if (simPath ~= nil and system.getInfo( "environment" ) == "simulator") then
 		mypath = system.pathForFile( simPath, system.ResourceDirectory )
 	else
 		mypath = system.pathForFile( path, dir )
@@ -54,14 +54,14 @@ m.runScript = function( path, dir, simPath, encryptionData)
 	local file, errorString = io.open( mypath, "r" )
 	local contents = file:read( "*a" )
 
-	if (encryptionData and system.getInfo( "environment" ) ~= "simulator" or simPath == nil ) then
+	if (encryptionData ~= nil and (system.getInfo( "environment" ) ~= "simulator" or simPath == nil) ) then
 		contents = crypt(contents, encryptionData, true)
 	end
     io.close( file )
     local returnFun = assert(loadstring(contents))
 	local myReturn= returnFun()
     file = nil
-    if (simPath and system.getInfo( "environment" ) == "simulator" and encryptionData) then
+    if (simPath ~= nil and system.getInfo( "environment" ) == "simulator" and encryptionData) then
     	local outPath = system.pathForFile( path, dir )
  
 		-- Open the file handle
